@@ -5,6 +5,7 @@
 @extends('layouts.public-page')
 
 @section('title', 'Berita — PINDAH Jateng')
+@section('meta_description', 'Kabar terbaru seputar inovasi dan riset daerah Provinsi Jawa Tengah.')
 @section('eyebrow', 'Informasi')
 @section('page_title', 'Berita')
 @section('page_lead', 'Kabar terbaru seputar inovasi dan riset daerah Provinsi Jawa Tengah.')
@@ -27,9 +28,9 @@
                             @endif
                         </div>
                         <div class="post-body">
-                            <span class="post-date">{{ $berita->published_at->translatedFormat('d F Y') }}</span>
+                            <span class="post-date">{{ $berita->created_at?->translatedFormat('d F Y') }}</span>
                             <h3 class="post-title">{{ $berita->judul }}</h3>
-                            <p class="post-excerpt">{{ \Illuminate\Support\Str::limit($berita->ringkasan, 120) }}</p>
+                            <p class="post-excerpt">{{ \Illuminate\Support\Str::limit($berita->deskripsi, 120) }}</p>
                         </div>
                     </a>
                 </div>

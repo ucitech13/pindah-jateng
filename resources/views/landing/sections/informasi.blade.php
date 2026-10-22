@@ -17,36 +17,28 @@
           </div>
           <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <div class="news-slide row g-4 align-items-center">
-                  <div class="col-md-6 order-md-2"><div class="news-thumb"><i class="bi bi-newspaper position-relative" style="z-index:2"></i></div></div>
-                  <div class="col-md-6 order-md-1">
-                    <span class="date-badge">10 Agustus 2026</span>
-                    <h4><a href="{{ route('berita.show', 'judul-berita-pertama') }}">Judul berita pertama ditempatkan di sini</a></h4>
-                    <p class="text-muted-2 mb-0">Ringkasan singkat berita. Ganti dengan konten dari CMS atau data berita BRIDA.</p>
+              @forelse ($beritaTerbaru as $item)
+                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                  <div class="news-slide row g-4 align-items-center">
+                    <div class="col-md-6 order-md-2"><div class="news-thumb">
+                      @if ($item->gambar)
+                        <img src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->judul }}" class="img-fluid">
+                      @else
+                        <i class="bi bi-newspaper position-relative" style="z-index:2"></i>
+                      @endif
+                    </div></div>
+                    <div class="col-md-6 order-md-1">
+                      <span class="date-badge">{{ $item->created_at?->translatedFormat('d F Y') }}</span>
+                      <h4><a href="{{ route('berita.show', $item->slug) }}">{{ $item->judul }}</a></h4>
+                      <p class="text-muted-2 mb-0">{{ \Illuminate\Support\Str::limit($item->deskripsi, 140) }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="carousel-item">
-                <div class="news-slide row g-4 align-items-center">
-                  <div class="col-md-6 order-md-2"><div class="news-thumb"><i class="bi bi-trophy position-relative" style="z-index:2"></i></div></div>
-                  <div class="col-md-6 order-md-1">
-                    <span class="date-badge">02 Agustus 2026</span>
-                    <h4><a href="{{ route('berita.show', 'judul-berita-kedua') }}">Judul berita kedua ditempatkan di sini</a></h4>
-                    <p class="text-muted-2 mb-0">Ringkasan singkat berita. Ganti dengan konten dari CMS atau data berita BRIDA.</p>
-                  </div>
+              @empty
+                <div class="carousel-item active">
+                  <div class="news-slide row g-4 align-items-center"><div class="col-12"><p class="text-muted-2 mb-0">Belum ada berita terbaru.</p></div></div>
                 </div>
-              </div>
-              <div class="carousel-item">
-                <div class="news-slide row g-4 align-items-center">
-                  <div class="col-md-6 order-md-2"><div class="news-thumb"><i class="bi bi-people position-relative" style="z-index:2"></i></div></div>
-                  <div class="col-md-6 order-md-1">
-                    <span class="date-badge">24 Juli 2026</span>
-                    <h4><a href="{{ route('berita.show', 'judul-berita-ketiga') }}">Judul berita ketiga ditempatkan di sini</a></h4>
-                    <p class="text-muted-2 mb-0">Ringkasan singkat berita. Ganti dengan konten dari CMS atau data berita BRIDA.</p>
-                  </div>
-                </div>
-              </div>
+              @endforelse
             </div>
           </div>
         </div>

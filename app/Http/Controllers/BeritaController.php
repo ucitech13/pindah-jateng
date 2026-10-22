@@ -3,21 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use App\Models\Berita;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-
-/**
- * STUB: data masih dummy supaya halaman bisa dilihat tanpa database.
- * Saat model Berita siap, ganti dengan:
- *
- *   index():  $items = Berita::query()->whereNotNull('published_at')->latest('published_at')->paginate(9);
- *   show():   public function show(Berita $berita)   // route: /berita/{berita:slug}
- *             $lainnya = Berita::where('id', '!=', $berita->id)->latest('published_at')->take(4)->get();
- *
- * Lalu hapus dummy(). Blade tidak perlu diubah.
- */
 
 class BeritaController extends Controller
 {
@@ -26,19 +16,23 @@ class BeritaController extends Controller
      */
     public function index(Request $request): View
     {
-        $all = $this->dummy();
-        $perPage = 6;
-        $page = LengthAwarePaginator::resolveCurrentPage();
-
-        $items = new LengthAwarePaginator(
-            $all->forPage($page, $perPage)->values(),
-            $all->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        $items = Berita::query()->latest('created_at')->paginate(9);
 
         return view('berita.index', compact('items'));
+    }
+
+    public function adminIndex(): View
+    {
+        $berita = Berita::query()->latest('created_at')->paginate(10);
+
+        return view('backoffice.berita.index', compact('berita'));
+    }
+
+    public function adminShow(string $id): View
+    {
+        $berita = Berita::query()->findOrFail($id);
+
+        return view('backoffice.berita.show', compact('berita'));
     }
 
     /**
@@ -46,15 +40,26 @@ class BeritaController extends Controller
      */
     public function create()
     {
-        //
+        return view('backoffice.berita.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['required', 'string', 'max:10000'],
+            'gambar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        $validated['gambar'] = $request->file('gambar')->store('berita', 'public');
+        $validated['slug'] = $this->uniqueSlug($validated['judul']);
+        $validated['created_by'] = $request->user()->getKey();
+        Berita::create($validated);
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan.');
     }
 
     /**
@@ -62,12 +67,8 @@ class BeritaController extends Controller
      */
     public function show(string $slug): View
     {
-        $all = $this->dummy();
-        $berita = $all->firstWhere('slug', $slug);
-
-        abort_if($berita === null, 404);
-
-        $lainnya = $all->where('slug', '!=', $slug)->take(4);
+        $berita = Berita::query()->where('slug', $slug)->firstOrFail();
+        $lainnya = Berita::query()->whereKeyNot($berita->getKey())->latest('created_at')->take(4)->get();
 
         return view('berita.show', compact('berita', 'lainnya'));
     }
@@ -77,46 +78,58 @@ class BeritaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $berita = Berita::query()->findOrFail($id);
+
+        return view('backoffice.berita.edit', compact('berita'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
-        //
+        $berita = Berita::query()->findOrFail($id);
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['required', 'string', 'max:10000'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        $validated['slug'] = $this->uniqueSlug($validated['judul'], $berita->getKey());
+        if ($request->hasFile('gambar')) {
+            $newImage = $request->file('gambar')->store('berita', 'public');
+            if ($berita->gambar) {
+                Storage::disk('public')->delete($berita->gambar);
+            }
+            $validated['gambar'] = $newImage;
+        }
+        $berita->update($validated);
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
-        //
+        Berita::query()->findOrFail($id)->delete();
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }
 
-    private function dummy(): Collection
+    private function uniqueSlug(string $judul, ?int $exceptId = null): string
     {
-        $judul = [
-            'Judul berita pertama',
-            'Judul berita kedua',
-            'Judul berita ketiga',
-            'Contoh berita keempat',
-            'Contoh berita kelima',
-            'Contoh berita keenam',
-            'Contoh berita ketujuh',
-            'Contoh berita kedelapan',
-        ];
+        $base = Str::slug($judul) ?: 'berita';
+        $slug = $base;
+        $suffix = 2;
 
-        return collect($judul)->map(fn (string $j, int $i) => (object) [
-            'judul' => $j,
-            'slug' => Str::slug($j),
-            'ringkasan' => 'Ringkasan singkat berita. Ganti dengan data dari database.',
-            'isi' => "Paragraf pertama isi berita contoh.\n\nParagraf kedua isi berita contoh. Ganti dengan data dari database.",
-            'gambar' => null,
-            'penulis' => 'Admin BRIDA',
-            'published_at' => now()->subWeeks($i),
-        ]);
+        while (Berita::withTrashed()->where('slug', $slug)
+            ->when($exceptId, fn ($query) => $query->where('id', '!=', $exceptId))
+            ->exists()) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
     }
 }

@@ -33,4 +33,14 @@ Route::middleware('auth')->group(function () {
         Route::view('/kosong', 'backoffice.contoh.kosong')->name('kosong');
         Route::view('/tabel', 'backoffice.contoh.tabel')->name('tabel');
     });
+
+    Route::middleware('role:super-admin')->prefix('admin/berita')->name('admin.berita.')->controller(BeritaController::class)->group(function () {
+        Route::get('/', 'adminIndex')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}', 'adminShow')->whereNumber('id')->name('show');
+        Route::get('/{id}/edit', 'edit')->whereNumber('id')->name('edit');
+        Route::put('/{id}', 'update')->whereNumber('id')->name('update');
+        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
+    });
 });

@@ -1,0 +1,344 @@
+/*
+ * app.css — shell dashboard PINDAH Jateng (sidebar, topbar, konten, tema light/dark).
+ * Berdiri sendiri (tidak butuh public.css). Token warna merek disalin dari landing page.
+ * Tema memakai data-bs-theme bawaan Bootstrap 5.3 pada <html>.
+ */
+
+/* ================= TOKEN ================= */
+:root{
+  /* merek (sama dengan landing) */
+  --ink:#0b1f17; --forest:#17392c; --moss:#1f6b46; --deep:#0e3d28;
+  --lime:#a3e635; --mint:#2ecc71; --paper:#f6f3ec; --sand:#ebe6d9;
+
+  --sidebar-w:272px;
+  --topbar-h:68px;
+  --r-lg:24px; --r-md:18px; --r-sm:12px;
+}
+
+[data-bs-theme="light"]{
+  --app-bg:#f6f3ec;
+  --app-surface:#ffffff;
+  --app-surface-2:#f1ede3;
+  --app-border:rgba(11,31,23,.12);
+  --app-text:#0b1f17;
+  --app-muted:#5b6b62;
+  --app-accent:#1f6b46;
+  --app-accent-soft:rgba(31,107,70,.10);
+  --app-ring:rgba(31,107,70,.18);
+  --app-shadow:0 1px 2px rgba(11,31,23,.05), 0 14px 30px -20px rgba(11,31,23,.28);
+  --side-bg:linear-gradient(180deg,#0b1f17 0%,#0e3d28 100%);
+
+  --bs-body-bg:var(--app-bg);
+  --bs-body-color:#0b1f17;
+  --bs-body-color-rgb:11,31,23;
+  --bs-emphasis-color:#0b1f17;
+  --bs-secondary-color:rgba(11,31,23,.62);
+  --bs-tertiary-bg:var(--app-surface-2);
+  --bs-border-color:var(--app-border);
+  --bs-primary:#1f6b46;
+  --bs-primary-rgb:31,107,70;
+  --bs-link-color:#1f6b46;
+  --bs-link-color-rgb:31,107,70;
+  --bs-link-hover-color:#0e3d28;
+  --bs-link-hover-color-rgb:14,61,40;
+}
+
+[data-bs-theme="dark"]{
+  --app-bg:#08150f;
+  --app-surface:#0f241b;
+  --app-surface-2:#153226;
+  --app-border:rgba(255,255,255,.10);
+  --app-text:#e8efe9;
+  --app-muted:#9db0a5;
+  --app-accent:#a3e635;
+  --app-accent-soft:rgba(163,230,53,.12);
+  --app-ring:rgba(163,230,53,.22);
+  --app-shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -20px rgba(0,0,0,.7);
+  --side-bg:linear-gradient(180deg,#050e0a 0%,#0a1c14 100%);
+
+  --bs-body-bg:var(--app-bg);
+  --bs-body-color:#e8efe9;
+  --bs-body-color-rgb:232,239,233;
+  --bs-emphasis-color:#ffffff;
+  --bs-secondary-color:rgba(232,239,233,.66);
+  --bs-tertiary-bg:var(--app-surface-2);
+  --bs-border-color:var(--app-border);
+  --bs-primary:#a3e635;
+  --bs-primary-rgb:163,230,53;
+  --bs-link-color:#a3e635;
+  --bs-link-color-rgb:163,230,53;
+  --bs-link-hover-color:#c2f26a;
+  --bs-link-hover-color-rgb:194,242,106;
+}
+
+/* ================= DASAR ================= */
+body.app-body{
+  margin:0;
+  background:var(--app-bg);
+  color:var(--app-text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:.97rem;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.app-body h1,.app-body h2,.app-body h3,.app-body h4,.app-body h5,.display-font{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.12;
+}
+.text-muted-2{color:var(--app-muted)}
+
+/* Tombol utama mengikuti merek: moss (light) / lime (dark) */
+.btn-primary{
+  --bs-btn-color:#fff;
+  --bs-btn-bg:var(--moss);--bs-btn-border-color:var(--moss);
+  --bs-btn-hover-color:#fff;--bs-btn-hover-bg:var(--deep);--bs-btn-hover-border-color:var(--deep);
+  --bs-btn-active-color:#fff;--bs-btn-active-bg:var(--deep);--bs-btn-active-border-color:var(--deep);
+  --bs-btn-disabled-bg:var(--moss);--bs-btn-disabled-border-color:var(--moss);
+  --bs-btn-focus-shadow-rgb:31,107,70;
+}
+[data-bs-theme="dark"] .btn-primary{
+  --bs-btn-color:var(--ink);
+  --bs-btn-bg:var(--lime);--bs-btn-border-color:var(--lime);
+  --bs-btn-hover-color:var(--ink);--bs-btn-hover-bg:#b6f04f;--bs-btn-hover-border-color:#b6f04f;
+  --bs-btn-active-color:var(--ink);--bs-btn-active-bg:#b6f04f;--bs-btn-active-border-color:#b6f04f;
+  --bs-btn-disabled-bg:var(--lime);--bs-btn-disabled-border-color:var(--lime);
+  --bs-btn-focus-shadow-rgb:163,230,53;
+}
+.btn-outline-primary{
+  --bs-btn-color:var(--app-accent);--bs-btn-border-color:var(--app-accent);
+  --bs-btn-hover-color:#fff;--bs-btn-hover-bg:var(--moss);--bs-btn-hover-border-color:var(--moss);
+  --bs-btn-active-color:#fff;--bs-btn-active-bg:var(--moss);--bs-btn-active-border-color:var(--moss);
+}
+[data-bs-theme="dark"] .btn-outline-primary{
+  --bs-btn-hover-color:var(--ink);--bs-btn-hover-bg:var(--lime);--bs-btn-hover-border-color:var(--lime);
+  --bs-btn-active-color:var(--ink);--bs-btn-active-bg:var(--lime);--bs-btn-active-border-color:var(--lime);
+}
+.btn{border-radius:var(--r-sm);font-weight:600}
+
+.form-control,.form-select{border-radius:var(--r-sm)}
+.form-control:focus,.form-select:focus{
+  border-color:var(--app-accent);
+  box-shadow:0 0 0 .25rem var(--app-ring);
+}
+.form-check-input:checked{background-color:var(--moss);border-color:var(--moss)}
+[data-bs-theme="dark"] .form-check-input:checked{background-color:#25805a;border-color:#25805a}
+.form-check-input:focus{border-color:var(--app-accent);box-shadow:0 0 0 .25rem var(--app-ring)}
+
+.card{
+  --bs-card-bg:var(--app-surface);
+  --bs-card-border-color:var(--app-border);
+  --bs-card-cap-bg:transparent;
+  --bs-card-border-radius:var(--r-lg);
+  --bs-card-inner-border-radius:calc(var(--r-lg) - 1px);
+  box-shadow:var(--app-shadow);
+}
+.card-header{padding:1.1rem 1.4rem;font-family:'Bricolage Grotesque';font-weight:700;letter-spacing:-.02em;font-size:1.05rem}
+.card-body{padding:1.4rem}
+
+.dropdown-menu{
+  --bs-dropdown-bg:var(--app-surface);
+  --bs-dropdown-border-color:var(--app-border);
+  --bs-dropdown-link-hover-bg:var(--app-accent-soft);
+  --bs-dropdown-link-active-bg:var(--app-accent-soft);
+  --bs-dropdown-link-active-color:var(--app-accent);
+  --bs-dropdown-border-radius:var(--r-md);
+  --bs-dropdown-padding-x:.4rem;--bs-dropdown-padding-y:.4rem;
+  box-shadow:var(--app-shadow);
+}
+.dropdown-item{border-radius:10px;padding:.5rem .8rem;font-size:.92rem}
+
+.table{--bs-table-bg:transparent;--bs-table-striped-bg:var(--app-surface-2)}
+.table > :not(caption) > * > *{padding:.8rem 1rem}
+.table thead th{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--app-muted);font-weight:600;white-space:nowrap}
+
+.breadcrumb{--bs-breadcrumb-divider-color:var(--app-muted);font-size:.84rem;margin-bottom:.5rem}
+.breadcrumb a{color:var(--app-muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--app-accent)}
+
+/* ================= SHELL ================= */
+.app-shell{display:flex;min-height:100vh}
+
+.app-main{
+  flex:1;min-width:0;margin-left:var(--sidebar-w);
+  display:flex;flex-direction:column;min-height:100vh;
+  transition:margin-left .3s cubic-bezier(.2,.8,.2,1);
+}
+html.sidebar-hidden .app-main{margin-left:0}
+
+/* ================= SIDEBAR ================= */
+.app-sidebar{
+  position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);z-index:1040;
+  display:flex;flex-direction:column;
+  background:var(--side-bg);color:rgba(255,255,255,.78);
+  border-right:1px solid rgba(255,255,255,.06);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+html.sidebar-hidden .app-sidebar{transform:translateX(-100%)}
+
+.side-brand{
+  display:flex;align-items:center;gap:.75rem;height:var(--topbar-h);flex-shrink:0;
+  padding:0 1.25rem;text-decoration:none;color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.side-brand:hover{color:#fff}
+.side-brand-mark{
+  width:38px;height:38px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;
+  background:var(--lime);color:var(--ink);font-size:1.15rem;
+}
+.side-brand-text{display:flex;flex-direction:column;line-height:1.1}
+.side-brand-text strong{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.15rem;letter-spacing:-.03em}
+.side-brand-text small{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+.side-nav{flex:1;overflow-y:auto;padding:1rem .85rem 1.5rem;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+.side-label{
+  padding:1.1rem .85rem .4rem;font-size:.7rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.side-label:first-child{padding-top:.2rem}
+.side-menu,.side-sub{list-style:none;margin:0;padding:0}
+.side-menu > li + li{margin-top:2px}
+
+.side-link{
+  position:relative;display:flex;align-items:center;gap:.8rem;
+  padding:.62rem .85rem;border-radius:12px;
+  color:rgba(255,255,255,.74);text-decoration:none;font-weight:500;font-size:.93rem;
+  transition:background .2s,color .2s;
+}
+.side-link > i:first-child{font-size:1.1rem;width:1.25rem;text-align:center;flex-shrink:0}
+.side-link > span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-link:hover{background:rgba(255,255,255,.07);color:#fff}
+.side-link.active{background:rgba(163,230,53,.14);color:var(--lime)}
+.side-link.active::before{
+  content:"";position:absolute;left:-.85rem;top:20%;bottom:20%;width:3px;
+  border-radius:0 3px 3px 0;background:var(--lime);
+}
+.side-caret{font-size:.75rem;transition:transform .25s}
+.side-link:not(.collapsed) .side-caret{transform:rotate(180deg)}
+.side-badge{
+  font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;
+  background:var(--lime);color:var(--ink);
+}
+
+.side-sub{position:relative;margin:.2rem 0 .35rem 1.55rem;padding-left:.9rem;border-left:1px solid rgba(255,255,255,.12)}
+.side-sub a{
+  display:block;padding:.45rem .8rem;border-radius:10px;font-size:.88rem;
+  color:rgba(255,255,255,.62);text-decoration:none;transition:background .2s,color .2s;
+}
+.side-sub a:hover{background:rgba(255,255,255,.07);color:#fff}
+.side-sub a.active{color:var(--lime);background:rgba(163,230,53,.1)}
+
+.side-foot{
+  flex-shrink:0;padding:.9rem 1.25rem;font-size:.75rem;color:rgba(255,255,255,.4);
+  border-top:1px solid rgba(255,255,255,.07);
+}
+
+.app-backdrop{
+  position:fixed;inset:0;z-index:1035;background:rgba(3,10,7,.55);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+  opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;
+}
+
+/* ================= TOPBAR ================= */
+.app-topbar{
+  position:sticky;top:0;z-index:1020;height:var(--topbar-h);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0 1.5rem;
+  background:var(--app-bg);
+  border-bottom:1px solid var(--app-border);
+}
+@supports (background:color-mix(in srgb,red 50%,blue)){
+  .app-topbar{
+    background:color-mix(in srgb,var(--app-bg) 84%,transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    backdrop-filter:blur(14px) saturate(140%);
+  }
+}
+.topbar-left,.topbar-right{display:flex;align-items:center;gap:.6rem}
+
+.icon-btn{
+  width:42px;height:42px;display:inline-grid;place-items:center;padding:0;
+  border:1px solid var(--app-border);border-radius:14px;
+  background:var(--app-surface);color:var(--app-text);font-size:1.1rem;line-height:1;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.icon-btn:hover,.icon-btn:focus-visible,.icon-btn.show{border-color:var(--app-accent);color:var(--app-accent);background:var(--app-surface)}
+.icon-btn::after{display:none !important} /* sembunyikan caret bawaan dropdown-toggle */
+
+.user-chip{
+  display:flex;align-items:center;gap:.65rem;padding:.3rem .75rem .3rem .3rem;
+  border:1px solid var(--app-border);border-radius:999px;background:var(--app-surface);
+  color:var(--app-text);text-align:left;transition:border-color .2s;
+}
+.user-chip:hover,.user-chip.show{border-color:var(--app-accent)}
+.user-chip::after{display:none !important}
+.avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  font-family:'Bricolage Grotesque';font-weight:800;font-size:.95rem;color:#fff;
+  background:linear-gradient(135deg,var(--moss),var(--mint));
+}
+.user-meta{display:flex;flex-direction:column;line-height:1.15;min-width:0;max-width:170px}
+.user-meta strong{font-size:.88rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-meta small{font-size:.74rem;color:var(--app-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-head{padding:.7rem .8rem .8rem;border-bottom:1px solid var(--app-border);margin-bottom:.4rem}
+.user-head strong{display:block;font-size:.95rem}
+.user-head small{color:var(--app-muted)}
+
+.theme-menu .dropdown-item{display:flex;align-items:center;gap:.7rem}
+.theme-menu .dropdown-item .bi-check2{margin-left:auto;opacity:0}
+.theme-menu .dropdown-item.active .bi-check2{opacity:1}
+
+/* ================= KONTEN ================= */
+.app-content{flex:1;padding:1.75rem 1.5rem 2.5rem}
+.page-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.6rem}
+.page-title{font-size:clamp(1.55rem,2.6vw,2.1rem);margin:0}
+.page-lead{margin:.4rem 0 0;color:var(--app-muted);max-width:640px}
+.page-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+
+.app-footer{
+  padding:1.1rem 1.5rem;border-top:1px solid var(--app-border);
+  display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;
+  font-size:.84rem;color:var(--app-muted);
+}
+
+/* ---------- Komponen dashboard ---------- */
+.stat-card .card-body{display:flex;align-items:center;gap:1rem}
+.stat-icon{
+  width:52px;height:52px;border-radius:16px;flex-shrink:0;display:grid;place-items:center;
+  font-size:1.4rem;background:var(--app-accent-soft);color:var(--app-accent);
+}
+.stat-value{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.8rem;letter-spacing:-.03em;line-height:1}
+.stat-label{color:var(--app-muted);font-size:.86rem;margin-top:.3rem}
+
+.badge-role{
+  display:inline-block;padding:.28rem .75rem;border-radius:999px;
+  font-size:.76rem;font-weight:600;letter-spacing:.02em;
+  background:var(--app-accent-soft);color:var(--app-accent);
+}
+.badge-sample{
+  display:inline-block;padding:.15rem .55rem;border-radius:999px;vertical-align:middle;
+  font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--app-surface-2);color:var(--app-muted);border:1px dashed var(--app-border);
+}
+.list-plain{list-style:none;margin:0;padding:0}
+.list-plain li{padding:.8rem 0;border-top:1px solid var(--app-border)}
+.list-plain li:first-child{border-top:0;padding-top:0}
+.list-plain li:last-child{padding-bottom:0}
+.empty-state{text-align:center;padding:3.5rem 1rem;color:var(--app-muted)}
+.empty-state i{display:block;font-size:2.8rem;color:var(--app-accent);margin-bottom:.5rem}
+
+/* ================= RESPONSIF (harus paling bawah agar menang urutan) ================= */
+@media (max-width:991.98px){
+  .app-main{margin-left:0}
+  .app-sidebar{transform:translateX(-100%);box-shadow:none}
+  html.sidebar-open .app-sidebar{transform:none;box-shadow:0 0 60px rgba(0,0,0,.45)}
+  html.sidebar-open .app-backdrop{opacity:1;visibility:visible}
+  html.sidebar-open body{overflow:hidden}
+  .app-topbar{padding:0 1rem}
+  .app-content{padding:1.25rem 1rem 2rem}
+  .app-footer{padding:1rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .app-main,.app-sidebar,.app-backdrop,.side-caret{transition:none}
+}

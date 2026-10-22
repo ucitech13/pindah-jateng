@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\DashboardController;
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::prefix('berita')->name('berita.')->controller(BeritaController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{slug}', 'show')->name('show');
+});
+
+/* ---------- Auth (nama route 'login' wajib: dipakai middleware auth untuk redirect) ---------- */
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.store');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Halaman contoh template. Hapus setelah modul sungguhan ada.
+    Route::prefix('contoh')->name('contoh.')->group(function () {
+        Route::view('/kosong', 'backoffice.contoh.kosong')->name('kosong');
+        Route::view('/tabel', 'backoffice.contoh.tabel')->name('tabel');
+    });
+});

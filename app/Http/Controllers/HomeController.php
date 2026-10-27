@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,8 +14,9 @@ class HomeController extends Controller
     public function index()
     {
         $beritaTerbaru = Berita::query()->latest('created_at')->take(3)->get();
+        $videoTerbaru = Video::query()->latest('created_at')->take(5)->get();
 
-        return view('landing.index', compact('beritaTerbaru'));
+        return view('landing.index', compact('beritaTerbaru', 'videoTerbaru'));
     }
 
     /**

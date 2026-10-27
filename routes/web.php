@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VideoController;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -39,6 +39,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
         Route::get('/{id}', 'adminShow')->whereNumber('id')->name('show');
+        Route::get('/{id}/edit', 'edit')->whereNumber('id')->name('edit');
+        Route::put('/{id}', 'update')->whereNumber('id')->name('update');
+        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
+    });
+
+    Route::middleware('role:super-admin')->prefix('admin/video')->name('admin.video.')->controller(VideoController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}', 'show')->whereNumber('id')->name('show');
         Route::get('/{id}/edit', 'edit')->whereNumber('id')->name('edit');
         Route::put('/{id}', 'update')->whereNumber('id')->name('update');
         Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');

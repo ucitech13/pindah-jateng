@@ -45,11 +45,39 @@
       </div>
       <div class="col-lg-5 reveal d1">
         <div class="panel">
-          <div class="panel-head"><h3>Video</h3><span class="text-muted-2 small">YouTube</span></div>
-          {{-- Isi data-yt dengan ID video YouTube; klik akan memuat pemutar --}}
-          <div class="video-box" id="videoBox" data-yt="">
-            <span class="play"><i class="bi bi-play-fill"></i></span>
-            <span class="video-cap">Profil PINDAH Jateng</span>
+          <div class="panel-head">
+            <h3>Video</h3>
+            @if ($videoTerbaru->count() > 1)
+              <div class="mini-ctl">
+                <button data-bs-target="#videoCarousel" data-bs-slide="prev" aria-label="Sebelumnya"><i class="bi bi-chevron-left"></i></button>
+                <button data-bs-target="#videoCarousel" data-bs-slide="next" aria-label="Berikutnya"><i class="bi bi-chevron-right"></i></button>
+              </div>
+            @else
+              <span class="text-muted-2 small">YouTube</span>
+            @endif
+          </div>
+          <div id="videoCarousel" class="carousel slide" data-bs-ride="false">
+            <div class="carousel-inner">
+              @forelse ($videoTerbaru as $video)
+                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                  @if ($video->youtubeId())
+                    <div class="video-box" data-yt="{{ $video->youtubeId() }}">
+                      <iframe src="{{ $video->embedUrl() }}" allow="encrypted-media; picture-in-picture" allowfullscreen title="Video PINDAH Jateng"></iframe>
+                    </div>
+                  @else
+                    <div class="video-box">
+                      <span class="video-cap">Tautan video tidak valid.</span>
+                    </div>
+                  @endif
+                </div>
+              @empty
+                <div class="carousel-item active">
+                  <div class="video-box">
+                    <span class="video-cap">Belum ada video.</span>
+                  </div>
+                </div>
+              @endforelse
+            </div>
           </div>
         </div>
       </div>

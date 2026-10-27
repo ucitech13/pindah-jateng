@@ -41,7 +41,7 @@
             </li>
 
             {{-- 2. MENU BERSUB --}}
-            @php($openMaster = request()->routeIs('contoh.tabel', 'admin.berita.*'))
+            @php($openMaster = request()->routeIs('contoh.tabel', 'admin.berita.*', 'admin.video.*'))
             <li>
                 <a class="side-link {{ $openMaster ? '' : 'collapsed' }}" href="#menuMaster"
                    data-bs-toggle="collapse" role="button"
@@ -55,6 +55,7 @@
                         <li><a class="{{ request()->routeIs('contoh.tabel') ? 'active' : '' }}" href="{{ route('contoh.tabel') }}">Contoh Tabel</a></li>
                         @role('super-admin')
                             <li><a class="{{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}">Berita</a></li>
+                            <li><a class="{{ request()->routeIs('admin.video.*') ? 'active' : '' }}" href="{{ route('admin.video.index') }}">Video</a></li>
                         @endrole
                         <li><a href="#">Sub menu ketiga</a></li>
                     </ul>

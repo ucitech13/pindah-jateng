@@ -37,6 +37,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($opds->hasPages())<div class="card-body">{{ $opds->links() }}</div>@endif
+        @if ($opds->hasPages())
+            <div class="card-body">
+                {{ $opds->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 @endsection

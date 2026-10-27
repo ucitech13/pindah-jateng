@@ -38,6 +38,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($heroes->hasPages())<div class="card-body">{{ $heroes->links() }}</div>@endif
+        @if ($heroes->hasPages())
+            <div class="card-body">
+                {{ $heroes->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 @endsection

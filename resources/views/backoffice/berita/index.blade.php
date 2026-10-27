@@ -38,6 +38,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($berita->hasPages())<div class="card-body">{{ $berita->links() }}</div>@endif
+        @if ($berita->hasPages())
+            <div class="card-body">
+                {{ $berita->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 @endsection

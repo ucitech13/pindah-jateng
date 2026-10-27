@@ -38,6 +38,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($videos->hasPages())<div class="card-body">{{ $videos->links() }}</div>@endif
+        @if ($videos->hasPages())
+            <div class="card-body">
+                {{ $videos->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 @endsection

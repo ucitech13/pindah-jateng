@@ -72,7 +72,7 @@
                 <li>
                     <a class="side-link" href="#">
                         <i class="bi bi-people"></i>
-                        <span>Pengguna &amp; Role</span>
+                        <span>Pengguna</span>
                     </a>
                 </li>
             </ul>

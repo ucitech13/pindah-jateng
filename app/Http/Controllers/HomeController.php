@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Hero;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $heroes = Hero::query()->latest('created_at')->get();
         $beritaTerbaru = Berita::query()->latest('created_at')->take(3)->get();
         $videoTerbaru = Video::query()->latest('created_at')->take(5)->get();
 
-        return view('landing.index', compact('beritaTerbaru', 'videoTerbaru'));
+        return view('landing.index', compact('heroes', 'beritaTerbaru', 'videoTerbaru'));
     }
 
     /**
